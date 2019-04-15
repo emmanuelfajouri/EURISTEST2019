@@ -14,27 +14,26 @@ namespace EURIS.Data
     {
         private IRepository<Product> productRepository;
         private IRepository<Catalog> catalogRepository;
-        private readonly IEURISContext _context;
+        private readonly IEURISContext context;
 
-        public UnitOfWork()
+        public UnitOfWork(IEURISContext _context)
         {
-            
-            _context = new EURISContext();
+            context = _context;
         }
 
         public IRepository<Product> ProductRepository
         {
-            get { return productRepository ?? (productRepository = new ProductRepository(_context)); }
+            get { return productRepository ?? (productRepository = new ProductRepository(context)); }
         }
 
         public IRepository<Catalog> CatalogRepository
         {
-            get { return catalogRepository ?? (catalogRepository = new CatalogRepository(_context)); }
+            get { return catalogRepository ?? (catalogRepository = new CatalogRepository(context)); }
         }
 
         public void SaveChanges()
         {
-            _context.Save();
+            context.Save();
         }
 
     }

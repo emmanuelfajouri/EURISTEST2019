@@ -1,6 +1,7 @@
 ﻿using EURIS.Data.Contracts;
 using EURIS.Entities.Models;
 using EURIS.Service.Contracts;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -18,6 +19,11 @@ namespace EURIS.Service
         public List<Product> GetProducts()
         {
             return _uow.ProductRepository.GetAll().ToList();
+        }
+
+        public List<Product> GetProducts(Func<Product, bool> where)
+        {
+            return _uow.ProductRepository.Find(where).ToList();
         }
 
         public Product GetProduct(int? id)

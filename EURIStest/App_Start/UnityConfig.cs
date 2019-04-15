@@ -5,6 +5,7 @@ using EURIS.Service.Contracts;
 using System;
 
 using Unity;
+using Unity.AspNet.Mvc;
 
 namespace EURISTest
 {
@@ -47,6 +48,7 @@ namespace EURISTest
             // TODO: Register your type's mappings here.
             // container.RegisterType<IProductRepository, ProductRepository>();
 
+            container.RegisterType<IEURISContext, EURISContext>(new PerRequestLifetimeManager());
             container.RegisterType<IUnitOfWork, UnitOfWork>();
             container.RegisterType<IProductManager, ProductManager>();
             container.RegisterType<ICatalogManager, CatalogManager>();

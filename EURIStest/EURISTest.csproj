@@ -210,6 +210,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Models\CatalogViewModel.cs" />
+    <Compile Include="Models\ProductViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -348,7 +350,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EURIS.Data\EURIS.Data.csproj">
-      <Project>{A22781D6-007F-46E4-801F-BD02CAFB8A34}</Project>
+      <Project>{a22781d6-007f-46e4-801f-bd02cafb8a34}</Project>
       <Name>EURIS.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\EURIS.Entities\EURIS.Entities.csproj">

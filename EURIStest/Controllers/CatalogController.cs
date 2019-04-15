@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using EURIS.Entities.Models;
+using EURIS.Service.Contracts;
+using EURISTest.Models;
 using System.Data;
-using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using EURIS.Data;
-using EURIS.Entities.Models;
-using EURIS.Service.Contracts;
 
 namespace EURISTest.Controllers
 {
@@ -16,10 +12,13 @@ namespace EURISTest.Controllers
     {
 
         private readonly ICatalogManager catalogManager;
+        private readonly IProductManager productManager;
 
-        public CatalogController(ICatalogManager _catalogManager)
+        public CatalogController(ICatalogManager _catalogManager, IProductManager _productManager)
         {
             catalogManager = _catalogManager;
+            productManager = _productManager;
+
         }
 
         // GET: Catalog
@@ -66,8 +65,6 @@ namespace EURISTest.Controllers
             return View(catalog);
         }
 
-        
-
         // GET: Catalog/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -75,12 +72,20 @@ namespace EURISTest.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             Catalog catalog = catalogManager.GetCatalog(id);
+
+            CatalogViewModel catalogvm = new CatalogViewModel { Code = catalog.Code,
+                Description = catalog.Description,
+                Id = catalog.Id,
+                SelectedProducts = catalog.Products.Select(x => x.Code).ToList(),
+                Products = productManager.GetProducts().Select(x=> new SelectListItem() { Text = x.Description, Value = x.Code}).ToList() };
+
             if (catalog == null)
             {
                 return HttpNotFound();
             }
-            return View(catalog);
+            return View(catalogvm);
         }
 
      
@@ -90,14 +95,26 @@ namespace EURISTest.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Code,Description")] Catalog catalog)
+        public ActionResult Edit(CatalogViewModel catalogviewmodel)
         {
             if (ModelState.IsValid)
             {
-                catalogManager.UpdateCatalog(catalog);
+                var old = catalogManager.GetCatalog(catalogviewmodel.Id);
+
+                if (old == null)
+                {
+                    return HttpNotFound();
+                }
+
+                old.Code = catalogviewmodel.Code;
+                old.Description = catalogviewmodel.Description;
+                old.Products.Clear();
+                old.Products = productManager.GetProducts(x=> catalogviewmodel.SelectedProducts.Contains(x.Code));
+                
+                catalogManager.UpdateCatalog(old);
                 return RedirectToAction("Index");
             }
-            return View(catalog);
+            return View(catalogviewmodel);
         }
 
        

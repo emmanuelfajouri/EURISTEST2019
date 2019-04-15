@@ -8,5 +8,14 @@ namespace EURIS.Data.Repositories
         public CatalogRepository(IEURISContext context) : base(context)
         {
         }
+
+        public override void Update(Catalog entity)
+        {
+            foreach (var prod in entity.Products)
+            {
+                Context.Products.Attach(prod);
+            }
+            base.Update(entity);
+        }
     }
 }
