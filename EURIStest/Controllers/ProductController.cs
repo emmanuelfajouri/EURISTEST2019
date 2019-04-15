@@ -1,5 +1,6 @@
 ﻿using EURIS.Entities.Models;
 using EURIS.Service.Contracts;
+using EURISTest.Models;
 using System.Net;
 using System.Web.Mvc;
 
@@ -47,15 +48,25 @@ namespace EURISTest.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Code,Description")] Product product)
+        public ActionResult Create(ProductViewModel product)
         {
             if (ModelState.IsValid)
             {
-                productManager.AddProduct(product);
+                productManager.AddProduct(MapCatalogViewModel(product));
                 return RedirectToAction("Index");
             }
 
             return View(product);
+        }
+
+        private Product MapCatalogViewModel(ProductViewModel productvm)
+        {
+            return new Product
+            {
+                Code = productvm.Code,
+                Description = productvm.Description,
+                Id = productvm.Id,
+            };
         }
 
         // GET: Product/Edit/5

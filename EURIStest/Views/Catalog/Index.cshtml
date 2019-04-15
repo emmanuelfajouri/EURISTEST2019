@@ -1,4 +1,4 @@
-﻿@model IEnumerable<EURIS.Entities.Models.Catalog>
+﻿@model IEnumerable<EURISTest.Models.CatalogViewModel>
 
 @{
     ViewBag.Title = "Index";
@@ -33,9 +33,9 @@
         </td>
         <td>
             <ul>
-                @foreach (var product in item.Products)
+                @foreach (var product in item.SelectedProducts)
                 {
-                    <li>@Html.DisplayFor(modelItem => product.Description)</li>
+                    <li>@Html.DisplayFor(modelItem => product)</li>
                 }
             </ul>
         </td>

@@ -1,5 +1,4 @@
-﻿@model EURIS.Entities.Models.Catalog
-
+﻿@model EURISTest.Models.CatalogViewModel
 @{
     ViewBag.Title = "Details";
 }
@@ -24,6 +23,18 @@
 
         <dd>
             @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Products)
+        </dt>
+        <dd>
+            <ul>
+                @foreach (var product in Model.SelectedProducts)
+                {
+                    <li>@Html.DisplayFor(modelItem => product)</li>
+                }
+            </ul>
         </dd>
 
     </dl>

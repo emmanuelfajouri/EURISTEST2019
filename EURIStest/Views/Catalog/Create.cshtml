@@ -1,4 +1,4 @@
-﻿@model EURIS.Entities.Models.Catalog
+﻿@model EURISTest.Models.CatalogViewModel
 
 @{
     ViewBag.Title = "Create";
@@ -34,7 +34,7 @@
     <div class="form-group">
         @Html.LabelFor(model => model.Products, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ListBoxFor(model => model.SelectedProducts, Model.Products, new { htmlAttributes = new { @class = "form-control" } })
             @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
         </div>
     </div>

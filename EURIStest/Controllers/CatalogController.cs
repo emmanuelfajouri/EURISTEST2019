@@ -1,6 +1,7 @@
 ﻿using EURIS.Entities.Models;
 using EURIS.Service.Contracts;
 using EURISTest.Models;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Net;
@@ -24,7 +25,12 @@ namespace EURISTest.Controllers
         // GET: Catalog
         public ActionResult Index()
         {
-            return View(catalogManager.GetCatalogs());
+            var catalogsVM = new List<CatalogViewModel>();
+            foreach (var item in catalogManager.GetCatalogs())
+            {
+                catalogsVM.Add(MapCatalog(item));
+            }
+            return View(catalogsVM);
         }
 
         // GET: Catalog/Details/5
@@ -34,7 +40,7 @@ namespace EURISTest.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Catalog catalog = catalogManager.GetCatalog(id);
+            var catalog = GetCatalogViewModel(id);
             if (catalog == null)
             {
                 return HttpNotFound();
@@ -46,7 +52,11 @@ namespace EURISTest.Controllers
         // GET: Catalog/Create
         public ActionResult Create()
         {
-            return View();
+            var newCatalog = new CatalogViewModel
+            {
+                Products = productManager.GetProducts().Select(x => new SelectListItem() { Text = x.Description, Value = x.Code }).ToList()
+            };
+            return View(newCatalog);
         }
 
         // POST: Catalog/Create
@@ -54,11 +64,11 @@ namespace EURISTest.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Code,Description")] Catalog catalog)
+        public ActionResult Create(CatalogViewModel catalog)
         {
             if (ModelState.IsValid)
             {
-                catalogManager.AddCatalog(catalog);
+                catalogManager.AddCatalog(MapCatalogViewModel(catalog));
                 return RedirectToAction("Index");
             }
 
@@ -73,22 +83,51 @@ namespace EURISTest.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            Catalog catalog = catalogManager.GetCatalog(id);
+            var catalogvm = GetCatalogViewModel(id);
 
-            CatalogViewModel catalogvm = new CatalogViewModel { Code = catalog.Code,
-                Description = catalog.Description,
-                Id = catalog.Id,
-                SelectedProducts = catalog.Products.Select(x => x.Code).ToList(),
-                Products = productManager.GetProducts().Select(x=> new SelectListItem() { Text = x.Description, Value = x.Code}).ToList() };
-
-            if (catalog == null)
+            if (catalogvm == null)
             {
                 return HttpNotFound();
             }
             return View(catalogvm);
         }
 
-     
+        private CatalogViewModel GetCatalogViewModel(int? id)
+        {
+            var catalog = catalogManager.GetCatalog(id);
+
+            if (catalog == null)
+                return null;
+
+            CatalogViewModel catalogvm = MapCatalog(catalog);
+
+            return catalogvm;
+        }
+
+        private CatalogViewModel MapCatalog(Catalog catalog)
+        {
+            return new CatalogViewModel
+            {
+                Code = catalog.Code,
+                Description = catalog.Description,
+                Id = catalog.Id,
+                SelectedProducts = catalog.Products.Select(x => x.Code).ToList(),
+                Products = productManager.GetProducts().Select(x => new SelectListItem() { Text = x.Description, Value = x.Code }).ToList()
+            };
+        }
+
+        private Catalog MapCatalogViewModel(CatalogViewModel catalogvm)
+        {
+            return new Catalog
+            {
+                Code = catalogvm.Code,
+                Description = catalogvm.Description,
+                Id = catalogvm.Id,
+                Products = productManager.GetProducts(x => catalogvm.SelectedProducts.Contains(x.Code)).ToList()
+            };
+        }
+
+
 
         // POST: Catalog/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
