@@ -1,4 +1,5 @@
 ﻿using EURIS.Data.Contracts;
+using EURIS.Data.Initializer;
 using EURIS.Entities.Models;
 using System.Data.Entity;
 using System.Data.Entity.SqlServer;
@@ -17,7 +18,7 @@ namespace EURIS.Data
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            Database.SetInitializer<EURISContext>(null);
+            Database.SetInitializer<EURISContext>(new EURISContextInitializer());
         }
 
         public void Save()
