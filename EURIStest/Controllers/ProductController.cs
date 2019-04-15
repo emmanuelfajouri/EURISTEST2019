@@ -1,6 +1,10 @@
 ﻿using EURIS.Entities.Models;
 using EURIS.Service.Contracts;
+using EURISTest.Helpers;
 using EURISTest.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 
@@ -10,10 +14,13 @@ namespace EURISTest.Controllers
     {
 
         private readonly IProductManager productManager;
+        private readonly ICatalogManager catalogManager;
 
-        public ProductController(IProductManager _productManager)
+
+        public ProductController(IProductManager _productManager, ICatalogManager _catalogManager)
         {
             productManager = _productManager;
+            catalogManager = _catalogManager;
         }
 
         // GET: Product
@@ -29,12 +36,14 @@ namespace EURISTest.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product product = productManager.GetProduct(id);
-            if (product == null)
+
+            var productvm = GetProductViewModel(id);
+
+            if (productvm == null)
             {
                 return HttpNotFound();
             }
-            return View(product);
+            return View(productvm);
         }
 
         // GET: Product/Create
@@ -52,14 +61,14 @@ namespace EURISTest.Controllers
         {
             if (ModelState.IsValid)
             {
-                productManager.AddProduct(MapCatalogViewModel(product));
+                productManager.AddProduct(MapProductViewModel(product));
                 return RedirectToAction("Index");
             }
 
             return View(product);
         }
 
-        private Product MapCatalogViewModel(ProductViewModel productvm)
+        private Product MapProductViewModel(ProductViewModel productvm)
         {
             return new Product
             {
@@ -76,14 +85,45 @@ namespace EURISTest.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product product = productManager.GetProduct(id);
-            if (product == null)
+            var productvm = GetProductViewModel(id);
+            if (productvm == null)
             {
                 return HttpNotFound();
             }
-            return View(product);
+            return View(productvm);
         }
 
+        private ProductViewModel GetProductViewModel(int? id)
+        {
+            var product = productManager.GetProduct(id);
+
+            if (product == null)
+                return null;
+
+            ProductViewModel productvm = MapProduct(product);
+
+            return productvm;
+        }
+
+        private ProductViewModel MapProduct(Product product)
+        {
+            var catalogsvn = new List<CatalogViewModel>();
+
+            foreach (var item in product.Catalogs)
+            {
+                catalogsvn.Add(ViewHelper.MapCatalog(item, productManager));
+            }
+            
+
+            return new ProductViewModel
+            {
+                Code = product.Code,
+                Description = product.Description,
+                Id = product.Id,
+                Catalogs = catalogsvn.Select(x => new SelectListItem() { Text = x.Description, Value = x.Code }).ToList()
+            };
+        }
+        
         // POST: Product/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
