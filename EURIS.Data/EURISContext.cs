@@ -2,7 +2,6 @@
 using EURIS.Data.Initializer;
 using EURIS.Entities.Models;
 using System.Data.Entity;
-using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Data.Entity.SqlServer;
 
 namespace EURIS.Data
@@ -20,8 +19,6 @@ namespace EURIS.Data
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             Database.SetInitializer<EURISContext>(new EURISContextInitializer());
-
-            //modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
 
             modelBuilder.Entity<ProductCatalog>()
                   .HasKey(i => new { i.ProductId, i.CatalogId });

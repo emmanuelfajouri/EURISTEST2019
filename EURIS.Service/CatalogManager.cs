@@ -2,7 +2,6 @@
 using EURIS.Entities.Models;
 using EURIS.Service.Contracts;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 
 namespace EURIS.Service
