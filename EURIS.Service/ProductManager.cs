@@ -19,5 +19,29 @@ namespace EURIS.Service
         {
             return _uow.ProductRepository.GetAll().ToList();
         }
+
+        public Product GetProduct(int? id)
+        {
+            return _uow.ProductRepository.Find(x => x.Id == id).FirstOrDefault();
+        }
+
+        public void AddProduct(Product product)
+        {
+            _uow.ProductRepository.Add(product);
+            _uow.SaveChanges();
+        }
+
+        public void DeleteProduct(int id)
+        {
+            Product product = GetProduct(id);
+            _uow.ProductRepository.Remove(product);
+            _uow.SaveChanges();
+        }
+
+        public void UpdateProduct(Product product)
+        {
+            _uow.ProductRepository.Update(product);
+            _uow.SaveChanges();
+        }
     }
 }

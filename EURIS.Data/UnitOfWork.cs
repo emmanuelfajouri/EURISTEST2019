@@ -32,7 +32,7 @@ namespace EURIS.Data
             get { return catalogRepository ?? (catalogRepository = new CatalogRepository(_context)); }
         }
 
-        public void save()
+        public void SaveChanges()
         {
             _context.Save();
         }

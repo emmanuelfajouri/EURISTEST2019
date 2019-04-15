@@ -2,6 +2,7 @@
 using EURIS.Entities.Models;
 using EURIS.Service.Contracts;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 
 namespace EURIS.Service
@@ -20,12 +21,28 @@ namespace EURIS.Service
             return _uow.CatalogRepository.GetAll().ToList();
         }
 
-        public void Save(Catalog catalog)
+        public Catalog GetCatalog(int? id)
         {
-            
-                _uow.CatalogRepository.Add(catalog);
+            return _uow.CatalogRepository.Find(x=> x.Id == id).FirstOrDefault();
+        }
 
-            //_uow.CatalogRepository.save();
+        public void AddCatalog(Catalog catalog)
+        {
+            _uow.CatalogRepository.Add(catalog);
+            _uow.SaveChanges();
+        }
+
+        public void DeleteCatalog(int id)
+        {
+            Catalog catalog = GetCatalog(id);
+            _uow.CatalogRepository.Remove(catalog);
+            _uow.SaveChanges();
+        }
+
+        public void UpdateCatalog(Catalog catalog)
+        {
+            _uow.CatalogRepository.Update(catalog);
+            _uow.SaveChanges();
         }
     }
 }

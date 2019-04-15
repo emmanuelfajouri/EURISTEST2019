@@ -10,7 +10,10 @@ namespace EURIS.Service.Contracts
     public interface ICatalogManager
     {
         List<Catalog> GetCatalogs();
-        void Save(Catalog catalog);
+        Catalog GetCatalog(int? id);
+        void AddCatalog(Catalog catalog);
+        void DeleteCatalog(int id);
+        void UpdateCatalog(Catalog catalog);
     }
     
 }

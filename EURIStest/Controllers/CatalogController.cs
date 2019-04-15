@@ -1,15 +1,20 @@
-﻿using EURIS.Entities.Models;
-using EURIS.Service.Contracts;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using EURIS.Data;
+using EURIS.Entities.Models;
+using EURIS.Service.Contracts;
 
 namespace EURISTest.Controllers
 {
     public class CatalogController : Controller
     {
+
         private readonly ICatalogManager catalogManager;
 
         public CatalogController(ICatalogManager _catalogManager)
@@ -20,17 +25,25 @@ namespace EURISTest.Controllers
         // GET: Catalog
         public ActionResult Index()
         {
-            //_manifiestoService.SaveDisconnected(manifiesto);
-            var catalogs = catalogManager.GetCatalogs();
-            return View("Catalogs", catalogs);
+            return View(catalogManager.GetCatalogs());
         }
 
         // GET: Catalog/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Catalog catalog = catalogManager.GetCatalog(id);
+            if (catalog == null)
+            {
+                return HttpNotFound();
+            }
+            return View(catalog);
         }
 
+      
         // GET: Catalog/Create
         public ActionResult Create()
         {
@@ -38,66 +51,80 @@ namespace EURISTest.Controllers
         }
 
         // POST: Catalog/Create
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult Create(Catalog collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult Create([Bind(Include = "Id,Code,Description")] Catalog catalog)
         {
-            try
+            if (ModelState.IsValid)
             {
-                var catalog = new Catalog();
-                catalog.Code = collection.Code;
-                 
-                // TODO: Add insert logic here
-                //var catalogs = catalogManager.Save;
+                catalogManager.AddCatalog(catalog);
                 return RedirectToAction("Index");
             }
-            catch
-            {
-                return View();
-            }
+
+            return View(catalog);
         }
+
+        
 
         // GET: Catalog/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Catalog catalog = catalogManager.GetCatalog(id);
+            if (catalog == null)
+            {
+                return HttpNotFound();
+            }
+            return View(catalog);
         }
+
+     
 
         // POST: Catalog/Edit/5
+        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
+        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "Id,Code,Description")] Catalog catalog)
         {
-            try
+            if (ModelState.IsValid)
             {
-                // TODO: Add update logic here
-
+                catalogManager.UpdateCatalog(catalog);
                 return RedirectToAction("Index");
             }
-            catch
-            {
-                return View();
-            }
+            return View(catalog);
         }
 
+       
+
         // GET: Catalog/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Catalog catalog = catalogManager.GetCatalog(id);
+            if (catalog == null)
+            {
+                return HttpNotFound();
+            }
+            return View(catalog);
         }
 
         // POST: Catalog/Delete/5
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(int id)
         {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            catalogManager.DeleteCatalog(id);
+            return RedirectToAction("Index");
         }
+       
     }
 }

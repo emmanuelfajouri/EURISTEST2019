@@ -6,6 +6,7 @@ namespace EURIS.Data.Contracts
     {
         IRepository<Product> ProductRepository { get; }
         IRepository<Catalog> CatalogRepository { get; }
+        void SaveChanges();
     }
 
    
