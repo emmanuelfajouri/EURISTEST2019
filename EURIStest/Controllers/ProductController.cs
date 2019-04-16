@@ -30,14 +30,14 @@ namespace EURISTest.Controllers
         }
 
         // GET: Product/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(string code)
         {
-            if (id == null)
+            if (string.IsNullOrEmpty(code))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var productvm = GetProductViewModel(id);
+            var productvm = GetProductViewModel(code);
 
             if (productvm == null)
             {
@@ -73,19 +73,18 @@ namespace EURISTest.Controllers
             return new Product
             {
                 Code = productvm.Code,
-                Description = productvm.Description,
-                Id = productvm.Id,
+                Description = productvm.Description
             };
         }
 
         // GET: Product/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(string code)
         {
-            if (id == null)
+            if (string.IsNullOrEmpty(code))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var productvm = GetProductViewModel(id);
+            var productvm = GetProductViewModel(code);
             if (productvm == null)
             {
                 return HttpNotFound();
@@ -93,9 +92,9 @@ namespace EURISTest.Controllers
             return View(productvm);
         }
 
-        private ProductViewModel GetProductViewModel(int? id)
+        private ProductViewModel GetProductViewModel(string code)
         {
-            var product = productManager.GetProduct(id);
+            var product = productManager.GetProduct(code);
 
             if (product == null)
                 return null;
@@ -119,7 +118,6 @@ namespace EURISTest.Controllers
             {
                 Code = product.Code,
                 Description = product.Description,
-                Id = product.Id,
                 Catalogs = catalogsvn.Select(x => new SelectListItem() { Text = x.Description, Value = x.Code }).ToList()
             };
         }
@@ -140,13 +138,13 @@ namespace EURISTest.Controllers
         }
 
         // GET: Product/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(string code)
         {
-            if (id == null)
+            if (string.IsNullOrEmpty(code))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Product product = productManager.GetProduct(id);
+            Product product = productManager.GetProduct(code);
             if (product == null)
             {
                 return HttpNotFound();
@@ -157,9 +155,9 @@ namespace EURISTest.Controllers
         // POST: Product/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(string code)
         {
-            productManager.DeleteProduct(id);
+            productManager.DeleteProduct(code);
             return RedirectToAction("Index");
         }
     }

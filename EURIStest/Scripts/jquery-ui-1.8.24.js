@@ -7735,7 +7735,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Adjust one of the date sub-fields. */
 	_adjustDate: function(id, offset, period) {
-		var target = $(id);
+		var target = $(code);
 		var inst = this._getInst(target[0]);
 		if (this._isDisabledDatepicker(target[0])) {
 			return;
@@ -7748,7 +7748,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Action for current link. */
 	_gotoToday: function(id) {
-		var target = $(id);
+		var target = $(code);
 		var inst = this._getInst(target[0]);
 		if (this._get(inst, 'gotoCurrent') && inst.currentDay) {
 			inst.selectedDay = inst.currentDay;
@@ -7767,7 +7767,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Action for selecting a new month/year. */
 	_selectMonthYear: function(id, select, period) {
-		var target = $(id);
+		var target = $(code);
 		var inst = this._getInst(target[0]);
 		inst['selected' + (period == 'M' ? 'Month' : 'Year')] =
 		inst['draw' + (period == 'M' ? 'Month' : 'Year')] =
@@ -7778,7 +7778,7 @@ $.extend(Datepicker.prototype, {
 
 	/* Action for selecting a day. */
 	_selectDay: function(id, month, year, td) {
-		var target = $(id);
+		var target = $(code);
 		if ($(td).hasClass(this._unselectableClass) || this._isDisabledDatepicker(target[0])) {
 			return;
 		}
@@ -7792,14 +7792,14 @@ $.extend(Datepicker.prototype, {
 
 	/* Erase the input field and hide the date picker. */
 	_clearDate: function(id) {
-		var target = $(id);
+		var target = $(code);
 		var inst = this._getInst(target[0]);
 		this._selectDate(target, '');
 	},
 
 	/* Update the input field with the selected date. */
 	_selectDate: function(id, dateStr) {
-		var target = $(id);
+		var target = $(code);
 		var inst = this._getInst(target[0]);
 		dateStr = (dateStr != null ? dateStr : this._formatDate(inst));
 		if (inst.input)
@@ -8304,7 +8304,7 @@ $.extend(Datepicker.prototype, {
 					window['DP_jQuery_' + dpuuid].datepicker._hideDatepicker();
 				},
 				today: function () {
-					window['DP_jQuery_' + dpuuid].datepicker._gotoToday(id);
+					window['DP_jQuery_' + dpuuid].datepicker._gotoToday(code);
 				},
 				selectDay: function () {
 					window['DP_jQuery_' + dpuuid].datepicker._selectDay(id, +this.getAttribute('data-month'), +this.getAttribute('data-year'), this);

@@ -17,7 +17,6 @@ namespace EURISTest.Helpers
             {
                 Code = catalog.Code,
                 Description = catalog.Description,
-                Id = catalog.Id,
                 SelectedProducts = catalog.Products.Select(x => x.Code).ToList(),
                 Products = productManager.GetProducts().Select(x => new SelectListItem() { Text = x.Description, Value = x.Code }).ToList()
             };

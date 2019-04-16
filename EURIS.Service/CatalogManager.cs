@@ -20,9 +20,9 @@ namespace EURIS.Service
             return _uow.CatalogRepository.GetAll().ToList();
         }
 
-        public Catalog GetCatalog(int? id)
+        public Catalog GetCatalog(string code)
         {
-            return _uow.CatalogRepository.Find(x=> x.Id == id).FirstOrDefault();
+            return _uow.CatalogRepository.Find(x=> x.Code == code).FirstOrDefault();
         }
 
         public void AddCatalog(Catalog catalog)
@@ -31,9 +31,9 @@ namespace EURIS.Service
             _uow.SaveChanges();
         }
 
-        public void DeleteCatalog(int id)
+        public void DeleteCatalog(string code)
         {
-            Catalog catalog = GetCatalog(id);
+            Catalog catalog = GetCatalog(code);
             _uow.CatalogRepository.Remove(catalog);
             _uow.SaveChanges();
         }

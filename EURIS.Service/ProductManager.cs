@@ -26,9 +26,9 @@ namespace EURIS.Service
             return _uow.ProductRepository.Find(where).ToList();
         }
 
-        public Product GetProduct(int? id)
+        public Product GetProduct(string code)
         {
-            return _uow.ProductRepository.Find(x => x.Id == id).FirstOrDefault();
+            return _uow.ProductRepository.Find(x => x.Code == code).FirstOrDefault();
         }
 
         public void AddProduct(Product product)
@@ -37,9 +37,9 @@ namespace EURIS.Service
             _uow.SaveChanges();
         }
 
-        public void DeleteProduct(int id)
+        public void DeleteProduct(string code)
         {
-            Product product = GetProduct(id);
+            Product product = GetProduct(code);
             _uow.ProductRepository.Remove(product);
             _uow.SaveChanges();
         }

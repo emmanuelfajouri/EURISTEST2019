@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace EURIS.Entities.Models
 {
     public class Catalog
     {
-        public int Id { get; set; }
+        [Key]
         public string Code { get; set; }
         public string Description { get; set; }
         public virtual List<Product> Products { get; set; }

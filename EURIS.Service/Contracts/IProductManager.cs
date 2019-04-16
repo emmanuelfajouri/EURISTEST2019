@@ -8,9 +8,9 @@ namespace EURIS.Service.Contracts
     {
         List<Product> GetProducts();
         List<Product> GetProducts(Func<Product, bool> where);
-        Product GetProduct(int? id);
+        Product GetProduct(string code);
         void AddProduct(Product product);
-        void DeleteProduct(int id);
+        void DeleteProduct(string code);
         void UpdateProduct(Product product);
     }
 }

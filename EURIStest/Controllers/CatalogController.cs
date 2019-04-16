@@ -34,13 +34,13 @@ namespace EURISTest.Controllers
         }
 
         // GET: Catalog/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(string code)
         {
-            if (id == null)
+            if (string.IsNullOrEmpty(code))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var catalog = GetCatalogViewModel(id);
+            var catalog = GetCatalogViewModel(code);
             if (catalog == null)
             {
                 return HttpNotFound();
@@ -76,14 +76,14 @@ namespace EURISTest.Controllers
         }
 
         // GET: Catalog/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(string code)
         {
-            if (id == null)
+            if (string.IsNullOrEmpty(code))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var catalogvm = GetCatalogViewModel(id);
+            var catalogvm = GetCatalogViewModel(code);
 
             if (catalogvm == null)
             {
@@ -92,9 +92,9 @@ namespace EURISTest.Controllers
             return View(catalogvm);
         }
 
-        private CatalogViewModel GetCatalogViewModel(int? id)
+        private CatalogViewModel GetCatalogViewModel(string code)
         {
-            var catalog = catalogManager.GetCatalog(id);
+            var catalog = catalogManager.GetCatalog(code);
 
             if (catalog == null)
                 return null;
@@ -110,7 +110,6 @@ namespace EURISTest.Controllers
             {
                 Code = catalog.Code,
                 Description = catalog.Description,
-                Id = catalog.Id,
                 SelectedProducts = catalog.Products.Select(x => x.Code).ToList(),
                 Products = productManager.GetProducts().Select(x => new SelectListItem() { Text = x.Description, Value = x.Code }).ToList()
             };
@@ -122,7 +121,6 @@ namespace EURISTest.Controllers
             {
                 Code = catalogvm.Code,
                 Description = catalogvm.Description,
-                Id = catalogvm.Id,
                 Products = productManager.GetProducts(x => catalogvm.SelectedProducts.Contains(x.Code)).ToList()
             };
         }
@@ -138,7 +136,7 @@ namespace EURISTest.Controllers
         {
             if (ModelState.IsValid)
             {
-                var old = catalogManager.GetCatalog(catalogviewmodel.Id);
+                var old = catalogManager.GetCatalog(catalogviewmodel.Code);
 
                 if (old == null)
                 {
@@ -159,13 +157,13 @@ namespace EURISTest.Controllers
        
 
         // GET: Catalog/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(string code)
         {
-            if (id == null)
+            if (string.IsNullOrEmpty(code))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Catalog catalog = catalogManager.GetCatalog(id);
+            Catalog catalog = catalogManager.GetCatalog(code);
             if (catalog == null)
             {
                 return HttpNotFound();
@@ -176,9 +174,9 @@ namespace EURISTest.Controllers
         // POST: Catalog/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(string code)
         {
-            catalogManager.DeleteCatalog(id);
+            catalogManager.DeleteCatalog(code);
             return RedirectToAction("Index");
         }
        

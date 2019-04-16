@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace EURIS.Entities.Models
 {
@@ -9,7 +10,7 @@ namespace EURIS.Entities.Models
             Catalogs = new List<Catalog>();
         }
 
-        public int Id { get; set; }
+        [Key]
         public string Code { get; set; }
         public string Description { get; set; }
         public virtual List<Catalog> Catalogs { get; set; }

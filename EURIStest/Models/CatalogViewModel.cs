@@ -6,7 +6,6 @@ namespace EURISTest.Models
 {
     public class CatalogViewModel
     {
-        public int Id { get; set; }
         [Required]
         public string Code { get; set; }
         [Required]
